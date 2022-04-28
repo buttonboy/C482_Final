@@ -13,18 +13,18 @@ public class Inventory {
     /**
      * List of All Parts
      */
-    private ObservableList<Part> allParts = FXCollections.observableArrayList();
+    private static ObservableList<Part> allParts = FXCollections.observableArrayList();
     
     /**
      * List of All Products
      */
-    private ObservableList<Product> allProducts = FXCollections.observableArrayList();
+    private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
 
     /**
      * Add Part to All Part list
      * @param newPart Part to be added
      */
-    public void addPart(Part newPart){
+    public static void addPart(Part newPart){
         allParts.add(newPart);
     } 
 
@@ -32,7 +32,7 @@ public class Inventory {
      * All Product to All Product list
      * @param newProduct Product to be added
      */
-    public void addProduct(Product newProduct){
+    public static void addProduct(Product newProduct){
         allProducts.add(newProduct);
     }
 
@@ -41,7 +41,7 @@ public class Inventory {
      * @param partId ID to search
      * @return Part
      */
-    public Part lookupPart(int partId){
+    public static Part lookupPart(int partId){
         Part pReturn = null;
         
         for(Part p: allParts){
@@ -56,7 +56,7 @@ public class Inventory {
      * @param productId ID to be searched
      * @return Product 
      */
-    public Product lookupProduct(int productId){
+    public static Product lookupProduct(int productId){
         Product pReturn = null;
         
         for(Product p : allProducts){
@@ -71,7 +71,7 @@ public class Inventory {
      * @param partName Name to be Searched
      * @return Part
      */
-    public ObservableList<Part> lookupPart(String partName){
+    public static ObservableList<Part> lookupPart(String partName){
         ObservableList<Part> oReturn = FXCollections.observableArrayList();
 
         for(Part p : allParts){
@@ -86,7 +86,7 @@ public class Inventory {
      * @param productName Name to be searched
      * @return Product
      */
-    public ObservableList<Product> lookupProduct(String productName){
+    public static ObservableList<Product> lookupProduct(String productName){
         ObservableList<Product> oReturn = FXCollections.observableArrayList();
 
         for(Product p : allProducts){
@@ -101,7 +101,7 @@ public class Inventory {
      * @param index index of Part to update
      * @param selectedPart Part to be inserted
      */
-    public void updatePart(int index, Part selectedPart){
+    public static void updatePart(int index, Part selectedPart){
         allParts.set(index, selectedPart);
     }
 
@@ -110,7 +110,7 @@ public class Inventory {
      * @param index Index of Product to update
      * @param newProduct Product to be inserted
      */
-    public void updateProduct(int index,Product newProduct){
+    public static void updateProduct(int index,Product newProduct){
         allProducts.set(index, newProduct);
     }
 
@@ -119,7 +119,7 @@ public class Inventory {
      * @param selectedPart Part to Delete
      * @return True if Successful, False on Fail
      */
-    public boolean deletePart(Part selectedPart){
+    public static boolean deletePart(Part selectedPart){
         if(allParts.contains(selectedPart)){
             allParts.remove(selectedPart);
             return true;
@@ -133,7 +133,7 @@ public class Inventory {
      * @param selectedProduct Product to Delete
      * @return True if Successful, False on Fail
      */
-    public boolean deleteProduct(Product selectedProduct){
+    public static boolean deleteProduct(Product selectedProduct){
         if(allProducts.contains(selectedProduct)){
             allProducts.remove(selectedProduct);
             return true;
@@ -146,16 +146,16 @@ public class Inventory {
      * Return List of Parts
      * @return ObservableList of Parts
      */
-    public ObservableList<Part> getAllParts(){
-        return getAllParts();
+    public static ObservableList<Part> getAllParts(){
+        return allParts;
     }
 
     /**
      * Return List of Products
      * @return ObservableList of Products
      */
-    public ObservableList<Product> getAllProducts(){
-        return getAllProducts();
+    public static ObservableList<Product> getAllProducts(){
+        return allProducts;
     }
 
 }
