@@ -42,11 +42,11 @@ public class Main extends Application {
     public static void main(String[] args) {
 
         //Add Parts
-        InHouse ProjectorBulb = new InHouse(0, "Wemax Nova Bulb", 20, 10, 10, 1000, 4);
+        InHouse ProjectorBulb = new InHouse(Inventory.createPartID(), "Wemax Nova Bulb", 20, 10, 10, 1000, 4);
         Inventory.addPart(ProjectorBulb);
 
         //Add Products
-        Product Projector = new Product(0, "Wemax Nova", 2000, 10, 2, 20);
+        Product Projector = new Product(Inventory.createProductID(), "Wemax Nova", 2000, 10, 2, 20);
         Inventory.addProduct(Projector);
 
 

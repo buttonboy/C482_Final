@@ -158,4 +158,22 @@ public class Inventory {
         return allProducts;
     }
 
+    public static int createPartID(){
+        int id = allParts.size();
+        while(lookupPart(id) != null){
+            ++id;
+        }
+
+        return id;
+    }
+
+    public static int createProductID(){
+        int id = allProducts.size();
+        while(lookupPart(id) != null){
+            ++id;
+        }
+
+        return id;
+    }
+
 }

@@ -25,106 +25,103 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * Controller class that provides control logic for the main screen of the application.
- *
- * A runtime error occurs if no part is selected when the user clicks the modify button.
- * This runtime error occurs due to a null value being passed to the initialize method of the
- * ModifyPartController. An example of correcting/preventing the runtime error from occurring
- * can be found in the partModifyAction() method of this class.
+ * Main Controller
+ * 
+ * Displays tables for Parts and Products and allows for searching and adding/editing for both
  *
  * @author Matt Goldstine
  */
 public class MainController implements Initializable {
 
     /**
-     * The part object selected in the table view by the user.
+     * Part the user has selected to edit
      */
-    private static Part partToModify;
+    private static Part partToEdit;
 
     /**
-     * The product object selected in the table view by the user.
+     * Product the user has selected to edit
      */
-    private static Product productToModify;
+    private static Product productToEdit;
 
     /**
-     * The text field for the parts search.
+     * 
      */
     @FXML
-    private TextField partSearchText;
+    private TextField partSearch;
 
     /**
      * Table view for the parts.
      */
     @FXML
-    private TableView<Part> partTableView;
+    private TableView<Part> partTable;
 
     /**
      * The ID column for the parts table.
      */
     @FXML
-    private TableColumn<Part, Integer> partIdColumn;
+    private TableColumn<Part, Integer> partColId;
 
     /**
      * The part name column for the parts table.
      */
     @FXML
-    private TableColumn<Part, String> partNameColumn;
+    private TableColumn<Part, String> partColName;
 
     /**
      * The inventory column for the parts table.
      */
     @FXML
-    private TableColumn<Part, Integer> partInventoryColumn;
+    private TableColumn<Part, Integer> partColInventory;
 
     /**
      * The price column for parts table.
      */
     @FXML
-    private TableColumn<Part, Double> partPriceColumn;
+    private TableColumn<Part, Double> partColPrice;
 
     /**
      * Table text field for the product search.
      */
     @FXML
-    private TextField productSearchText;
+    private TextField productSearch;
 
     /**
      * Table view for the products.
      */
     @FXML
-    private TableView<Product> productTableView;
+    private TableView<Product> productTable;
 
     /**
      * The ID column for the product table.
      */
     @FXML
-    private TableColumn<Product, Integer> productIdColumn;
+    private TableColumn<Product, Integer> productColId;
 
     /**
      * The name column for the product table.
      */
     @FXML
-    private TableColumn<Product, String> productNameColumn;
+    private TableColumn<Product, String> productColName;
 
     /**
      * The inventory column for the product table.
      */
     @FXML
-    private TableColumn<Product, Integer> productInventoryColumn;
+    private TableColumn<Product, Integer> productColInventory;
 
     /**
      * The price column for the product table.
      */
     @FXML
-    private TableColumn<Product, Double> productPriceColumn;
+    private TableColumn<Product, Double> productColPrice;
 
     /**
      * Gets the part object selected by the user in the part table.
      *
      * @return A part object, null if no part selected.
      */
-    public static Part getPartToModify() {
-        return partToModify;
+    public static Part getPartToEdit() {
+        return partToEdit;
     }
 
     /**
@@ -132,14 +129,14 @@ public class MainController implements Initializable {
      *
      * @return A product object, null if no product selected.
      */
-    public static Product getProductToModify() {
-        return productToModify;
+    public static Product getProductToEdit() {
+        return productToEdit;
     }
 
     /**
-     * Exits the program.
+     * Exits Program
      *
-     * @param event Exit button action.
+     * @param event Exit button event
      */
     @FXML
     void exitButtonAction(ActionEvent event) {
@@ -156,11 +153,7 @@ public class MainController implements Initializable {
     @FXML
     void partAddAction(ActionEvent event) throws IOException {
 
-        Parent parent = FXMLLoader.load(getClass().getResource("../view/AddPartScreen.fxml"));
-        Scene scene = new Scene(parent);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        loadPage("addPart", event);
     }
 
     /**
@@ -174,10 +167,10 @@ public class MainController implements Initializable {
     @FXML
     void partDeleteAction(ActionEvent event) {
 
-        Part selectedPart = partTableView.getSelectionModel().getSelectedItem();
+        Part selectedPart = partTable.getSelectionModel().getSelectedItem();
 
         if (selectedPart == null) {
-            displayAlert(3);
+            showAlert(3);
         } else {
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -192,28 +185,22 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Loads the ModifyPartController.
+     * Loads the EditPartController.
      *
      * The method displays an error message if no part is selected.
      *
-     * @param event Part modify button action.
+     * @param event Part Edit button action.
      * @throws IOException From FXMLLoader.
      */
     @FXML
-    void partModifyAction(ActionEvent event) throws IOException {
+    void partEditAction(ActionEvent event) throws IOException {
 
-        partToModify = partTableView.getSelectionModel().getSelectedItem();
+        partToEdit = partTable.getSelectionModel().getSelectedItem();
 
-        //Example of correcting a runtime error by preventing null from being passed
-        // to the ModifyPartController.
-        if (partToModify == null) {
-            displayAlert(3);
+        if (partToEdit == null) {
+            showAlert(3);
         } else {
-            Parent parent = FXMLLoader.load(getClass().getResource("../view/ModifyPartScreen.fxml"));
-            Scene scene = new Scene(parent);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+            loadPage("EditPart", event);
         }
     }
 
@@ -230,7 +217,7 @@ public class MainController implements Initializable {
 
         ObservableList<Part> allParts = Inventory.getAllParts();
         ObservableList<Part> partsFound = FXCollections.observableArrayList();
-        String searchString = partSearchText.getText();
+        String searchString = partSearch.getText();
 
         for (Part part : allParts) {
             if (String.valueOf(part.getId()).contains(searchString) ||
@@ -239,10 +226,10 @@ public class MainController implements Initializable {
             }
         }
 
-        partTableView.setItems(partsFound);
+        partTable.setItems(partsFound);
 
         if (partsFound.size() == 0) {
-            displayAlert(1);
+            showAlert(1);
         }
     }
 
@@ -254,8 +241,8 @@ public class MainController implements Initializable {
     @FXML
     void partSearchTextKeyPressed(KeyEvent event) {
 
-        if (partSearchText.getText().isEmpty()) {
-            partTableView.setItems(Inventory.getAllParts());
+        if (partSearch.getText().isEmpty()) {
+            partTable.setItems(Inventory.getAllParts());
         }
 
     }
@@ -268,12 +255,7 @@ public class MainController implements Initializable {
      */
     @FXML
     void productAddAction(ActionEvent event) throws IOException {
-
-        Parent parent = FXMLLoader.load(getClass().getResource("../view/AddProductScreen.fxml"));
-        Scene scene = new Scene(parent);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        loadPage("AddProduct", event);
     }
 
     /**
@@ -288,10 +270,10 @@ public class MainController implements Initializable {
     @FXML
     void productDeleteAction(ActionEvent event) {
 
-        Product selectedProduct = productTableView.getSelectionModel().getSelectedItem();
+        Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
 
         if (selectedProduct == null) {
-            displayAlert(4);
+            showAlert(4);
         } else {
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -304,7 +286,7 @@ public class MainController implements Initializable {
                 ObservableList<Part> assocParts = selectedProduct.getAllAssociatedParts();
 
                 if (assocParts.size() >= 1) {
-                    displayAlert(5);
+                    showAlert(5);
                 } else {
                     Inventory.deleteProduct(selectedProduct);
                 }
@@ -313,26 +295,22 @@ public class MainController implements Initializable {
     }
 
     /**
-     * Loads the ModifyProductController.
+     * Loads the EditProductController.
      *
      * The method displays an error message if no product is selected.
      *
-     * @param event Product modify button action.
+     * @param event Product Edit button action.
      * @throws IOException From FXMLLoader.
      */
     @FXML
-    void productModifyAction(ActionEvent event) throws IOException {
+    void productEditAction(ActionEvent event) throws IOException {
 
-        productToModify = productTableView.getSelectionModel().getSelectedItem();
+        productToEdit = productTable.getSelectionModel().getSelectedItem();
 
-        if (productToModify == null) {
-            displayAlert(4);
+        if (productToEdit == null) {
+            showAlert(4);
         } else {
-            Parent parent = FXMLLoader.load(getClass().getResource("../view/ModifyProductScreen.fxml"));
-            Scene scene = new Scene(parent);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+            loadPage("EditProduct", event);
         }
     }
 
@@ -349,7 +327,7 @@ public class MainController implements Initializable {
 
         ObservableList<Product> allProducts = Inventory.getAllProducts();
         ObservableList<Product> productsFound = FXCollections.observableArrayList();
-        String searchString = productSearchText.getText();
+        String searchString = productSearch.getText();
 
         for (Product product : allProducts) {
             if (String.valueOf(product.getId()).contains(searchString) ||
@@ -358,10 +336,10 @@ public class MainController implements Initializable {
             }
         }
 
-        productTableView.setItems(productsFound);
+        productTable.setItems(productsFound);
 
         if (productsFound.size() == 0) {
-            displayAlert(2);
+            showAlert(2);
         }
     }
 
@@ -373,8 +351,8 @@ public class MainController implements Initializable {
     @FXML
     void productSearchTextKeyPressed(KeyEvent event) {
 
-        if (productSearchText.getText().isEmpty()) {
-            productTableView.setItems(Inventory.getAllProducts());
+        if (productSearch.getText().isEmpty()) {
+            productTable.setItems(Inventory.getAllProducts());
         }
     }
 
@@ -383,7 +361,7 @@ public class MainController implements Initializable {
      *
      * @param alertType Alert message selector.
      */
-    private void displayAlert(int alertType) {
+    private void showAlert(int alertType) {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         Alert alertError = new Alert(Alert.AlertType.ERROR);
@@ -419,6 +397,21 @@ public class MainController implements Initializable {
     }
 
     /**
+     * 
+     * @param String Page name without file extension
+     * @param event Action Event for obtain current Window
+     * @throws IOException
+     */
+    private void loadPage(String page, ActionEvent event)throws IOException{
+        page = "../Pages/" + page + ".fxml";
+        Parent parent = FXMLLoader.load(getClass().getResource(page));
+        Scene scene = new Scene(parent);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    /**
      * Initializes controller and populates table views.
      *
      * @param location The location used to resolve relative paths for the root object, or null if the location is not known.
@@ -427,18 +420,18 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        //Populate parts table view
-        partTableView.setItems(Inventory.getAllParts());
-        partIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        partNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        partInventoryColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        partPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        //Part Table
+        partTable.setItems(Inventory.getAllParts());
+        partColId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        partColName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        partColInventory.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        partColPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        //Populate products table view
-        productTableView.setItems(Inventory.getAllProducts());
-        productIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        productInventoryColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
-        productPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        //Product Table
+        productTable.setItems(Inventory.getAllProducts());
+        productColId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        productColName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        productColInventory.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        productColPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
     }
 }
