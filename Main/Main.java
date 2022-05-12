@@ -1,14 +1,14 @@
 package Main;
 
+import Model.InHouse;
+import Model.Inventory;
+import Model.Outsourced;
+import Model.Product;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import Inventory.InHouse;
-import Inventory.Inventory;
-import Inventory.Outsourced;
-import Inventory.Product;
 
 /**
  * Inventory Management Application
@@ -26,7 +26,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../Pages/main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../View/main.fxml"));
         primaryStage.setTitle("Inventory Management System");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
@@ -51,29 +51,29 @@ public class Main extends Application {
 
 
 
-       /*  //partId = Inventory.getNewPartId();
+       /*  //partId = Model.getNewPartId();
         int id = 0;
         InHouse tvScreen = new InHouse(id,"TV Screen", 300.00, 5, 1, 20,
                 101);
-        //partId = Inventory.getNewPartId();
+        //partId = Model.getNewPartId();
         id = 1;
         InHouse tvShell = new InHouse(id,"TV Shell", 100.00, 5, 1, 20,
                 101);
-        //partId = Inventory.getNewPartId();
+        //partId = Model.getNewPartId();
         id = 2;
         InHouse powerCord = new InHouse(id,"Power Cord", 2.99, 5, 1, 20,
                 101);
-        //partId = Inventory.getNewPartId();
+        //partId = Model.getNewPartId();
         id = 3;
         Outsourced remote = new Outsourced(id, "Remote Control",29.99, 50, 30,
                 100, "Panasonic");
-        Inventory.addPart(tvScreen);
-        Inventory.addPart(tvShell);
-        Inventory.addPart(powerCord);
-        Inventory.addPart(remote);
+        Model.addPart(tvScreen);
+        Model.addPart(tvShell);
+        Model.addPart(powerCord);
+        Model.addPart(remote);
 
         //Add sample product
-        //int productId = Inventory.getNewProductId();
+        //int productId = Model.getNewProductId();
         id = 0;
         Product television = new Product(id, "LCD Television", 499.99, 20, 20,
                 100);
@@ -81,7 +81,7 @@ public class Main extends Application {
         television.addAssociatedPart(tvShell);
         television.addAssociatedPart(powerCord);
         television.addAssociatedPart(remote);
-        Inventory.addProduct(television); */
+        Model.addProduct(television); */
 
         //System.out.println("Application starting");
         launch(args);

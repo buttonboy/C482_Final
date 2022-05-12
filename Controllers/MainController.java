@@ -15,14 +15,15 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import Inventory.Inventory;
-import Inventory.Part;
-import Inventory.Product;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import Model.Inventory;
+import Model.Part;
+import Model.Product;
 
 /**
  * Main Controller
@@ -403,7 +404,7 @@ public class MainController implements Initializable {
      * @throws IOException
      */
     private void loadPage(String page, ActionEvent event)throws IOException{
-        page = "../Pages/" + page + ".fxml";
+        page = "../View/" + page + ".fxml";
         Parent parent = FXMLLoader.load(getClass().getResource(page));
         Scene scene = new Scene(parent);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

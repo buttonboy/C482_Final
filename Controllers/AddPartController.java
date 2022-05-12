@@ -9,15 +9,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
-import Inventory.InHouse;
-import Inventory.Inventory;
-import Inventory.Outsourced;
-import Inventory.Part;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import Model.Alerts;
+import Model.InHouse;
+import Model.Inventory;
+import Model.Outsourced;
+import Model.Part;
 
 /**
  * Controller class for Add Part Page.
@@ -26,81 +28,84 @@ import java.util.ResourceBundle;
  */
 public class AddPartController implements Initializable {
 
-    /**
-     * The machine ID/comapny name label for the part.
-     */
-    @FXML
-    private Label partIdNameLabel;
 
+    
     /**
-     * The in-house radio button.
-     */
-    @FXML
-    private RadioButton inHouseRadioButton;
-
-    /**
-     * The toggle group for the radio buttons.
+     * Part Type Toggle Group
      */
     @FXML
     private ToggleGroup tgPartType;
-
+    
     /**
-     * The outsourced radio button.
+     * In-House radio button.
+     */
+    @FXML
+    private RadioButton inHouseRadioButton;
+    
+    /**
+     * Outsourced radio button.
      */
     @FXML
     private RadioButton outsourcedRadioButton;
 
     /**
-     * The part ID text field.
+     * Part ID text field.
      */
     @FXML
-    private TextField partIdText;
+    private TextField idInput;
 
     /**
-     * The part name text field.
+     * Part name text field.
      */
     @FXML
-    private TextField partNameText;
+    private TextField nameInput;
 
     /**
-     * The part inventory text field.
+     * Part stock text field.
      */
     @FXML
-    private TextField partInventoryText;
+    private TextField stockInput;
 
     /**
-     * The part price text field.
+     * Part price text field.
      */
     @FXML
-    private TextField partPriceText;
+    private TextField priceInput;
 
     /**
-     * The part maximum level text field.
+     * Part maximum stock text field.
      */
     @FXML
-    private TextField partMaxText;
+    private TextField maxInput;
 
+    
     /**
-     * The machine ID/company name text field for the part.
+     * Part minimum stock text field.
      */
     @FXML
-    private TextField partIdNameText;
-
+    private TextField minInput;
+    
     /**
-     * The part minimum level text field.
+     * The Machine ID/Company Name Label for part.
      */
     @FXML
-    private TextField partMinText;
-
+    private Label machineCompLabel;
+    
     /**
-     * Displays confirmation dialog and loads MainScreenController.
+     * The Machine ID/Company Name Input for the part.
+     */
+    @FXML
+    private TextField machineCompInput;
+    
+    /**
+     * Confirmation dialog before loading Main Page.
      *
      * @param event Cancel button action.
-     * @throws IOException From FXMLLoader.
+     * @throws IOException FXMLLoader.
      */
     @FXML
     void cancelButtonAction(ActionEvent event) throws IOException {
-
+        
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Alert");
         alert.setContentText("Do you want cancel changes and return to the main screen?");
@@ -112,72 +117,70 @@ public class AddPartController implements Initializable {
     }
 
     /**
-     * Sets machine ID/company name label to "Machine ID".
+     * Update machine ID/company name label to "Machine ID".
      *
      * @param event In-house raido button action.
      */
     @FXML
     void inHouseRadioButtonAction(ActionEvent event) {
 
-        partIdNameLabel.setText("Machine ID");
+        machineCompLabel.setText("Machine ID");
     }
 
     /**
-     * Sets machine ID/company name label to "Company Name".
+     * Update machine ID/company name label to "Company Name".
      *
      * @param event Outsourced radio button.
      */
     @FXML
     void outsourcedRadioButtonAction(ActionEvent event) {
 
-        partIdNameLabel.setText("Company Name");
+        machineCompLabel.setText("Company Name");
     }
 
     /**
-     * Adds new part to inventory and loads MainScreenController.
+     * Add new part to inventory and load MainController.
      *
-     * Text fields are validated with error messages displayed preventing empty and/or
-     * invalid values.
+     * Validates Inputs before saving, display error on fail.
      *
      * @param event Save button action.
-     * @throws IOException From FXMLLoader.
+     * @throws IOException FXMLLoader.
      */
     @FXML
     void saveButtonAction(ActionEvent event) throws IOException {
 
         try {
             int id = 0;
-            String name = partNameText.getText();
-            Double price = Double.parseDouble(partPriceText.getText());
-            int stock = Integer.parseInt(partInventoryText.getText());
-            int min = Integer.parseInt(partMinText.getText());
-            int max = Integer.parseInt(partMaxText.getText());
+            String name = nameInput.getText();
+            Double price = Double.parseDouble(priceInput.getText());
+            int stock = Integer.parseInt(stockInput.getText());
+            int min = Integer.parseInt(minInput.getText());
+            int max = Integer.parseInt(maxInput.getText());
             int machineId;
-            String companyName;
+            String compName;
             boolean partAddSuccessful = false;
 
             if (name.isEmpty()) {
-                displayAlert(5);
+                Alerts.display(Alerts.Errors.INVALID_NAME);
             } else {
-                if (minValid(min, max) && inventoryValid(min, max, stock)) {
+                if (minValid(min, max) && stockValid(min, max, stock)) {
 
                     if (inHouseRadioButton.isSelected()) {
                         try {
-                            machineId = Integer.parseInt(partIdNameText.getText());
+                            machineId = Integer.parseInt(machineCompInput.getText());
                             InHouse newInHousePart = new InHouse(id, name, price, stock, min, max, machineId);
                             newInHousePart.setId(Inventory.createPartID());
                             Inventory.addPart(newInHousePart);
                             partAddSuccessful = true;
                         } catch (Exception e) {
-                            displayAlert(2);
+                            Alerts.display(Alerts.Errors.PART_ADD_FAIL);;
                         }
                     }
 
                     if (outsourcedRadioButton.isSelected()) {
-                        companyName = partIdNameText.getText();
-                        Outsourced newOutsourcedPart = new Outsourced(id, name, price, stock, min, max,
-                                companyName);
-                        newOutsourcedPart.setId(Inventory.createProductID());
+                        compName = machineCompInput.getText();
+                        Outsourced newOutsourcedPart = new Outsourced(id, name, price, stock, min, max, compName);
+                        newOutsourcedPart.setId(Inventory.createPartID());
                         Inventory.addPart(newOutsourcedPart);
                         partAddSuccessful = true;
                     }
@@ -188,7 +191,7 @@ public class AddPartController implements Initializable {
                 }
             }
         } catch(Exception e) {
-            displayAlert(1);
+            Alerts.display(Alerts.Errors.PART_ADD_FAIL);
         }
     }
 
@@ -200,7 +203,7 @@ public class AddPartController implements Initializable {
      */
     private void returnToMainScreen(ActionEvent event) throws IOException {
 
-        Parent parent = FXMLLoader.load(getClass().getResource("../view/MainScreen.fxml"));
+        Parent parent = FXMLLoader.load(getClass().getResource("../View/main.fxml"));
         Scene scene = new Scene(parent);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
@@ -220,74 +223,33 @@ public class AddPartController implements Initializable {
 
         if (min <= 0 || min >= max) {
             isValid = false;
-            displayAlert(3);
+            Alerts.display(Alerts.Errors.INVALID_MIN);
         }
 
         return isValid;
     }
 
     /**
-     * Validates that inventory level is equal too or between min and max.
+     * Validates that stock is equal too or within min and max.
      *
      * @param min The minimum value for the part.
      * @param max The maximum value for the part.
-     * @param stock The inventory level for the part.
-     * @return Boolean indicating if inventory is valid.
+     * @param stock The stock for the part.
+     * @return Boolean Is Stock Valid
      */
-    private boolean inventoryValid(int min, int max, int stock) {
+    private boolean stockValid(int min, int max, int stock) {
 
         boolean isValid = true;
 
         if (stock < min || stock > max) {
             isValid = false;
-            displayAlert(4);
+            Alerts.display(Alerts.Errors.INVALID_STOCK);
         }
 
         return isValid;
     }
 
-    /**
-     * Displays various alert messages.
-     *
-     * @param alertType Alert message selector.
-     */
-    private void displayAlert(int alertType) {
-
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-
-        switch (alertType) {
-            case 1:
-                alert.setTitle("Error");
-                alert.setHeaderText("Error Adding Part");
-                alert.setContentText("Form contains blank fields or invalid values.");
-                alert.showAndWait();
-                break;
-            case 2:
-                alert.setTitle("Error");
-                alert.setHeaderText("Invalid value for Machine ID");
-                alert.setContentText("Machine ID may only contain numbers.");
-                alert.showAndWait();
-                break;
-            case 3:
-                alert.setTitle("Error");
-                alert.setHeaderText("Invalid value for Min");
-                alert.setContentText("Min must be a number greater than 0 and less than Max.");
-                alert.showAndWait();
-                break;
-            case 4:
-                alert.setTitle("Error");
-                alert.setHeaderText("Invalid value for Inventory");
-                alert.setContentText("Inventory must be a number equal to or between Min and Max.");
-                alert.showAndWait();
-                break;
-            case 5:
-                alert.setTitle("Error");
-                alert.setHeaderText("Name Empty");
-                alert.setContentText("Name cannot be empty.");
-                alert.showAndWait();
-                break;
-        }
-    }
+    
 
     /**
      * Initializes controller and sets in-house radio button to true.

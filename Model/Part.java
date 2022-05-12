@@ -1,4 +1,4 @@
-package Inventory;
+package Model;
 /**
 * Supplied class Part.java 
  */

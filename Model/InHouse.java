@@ -1,4 +1,4 @@
-package Inventory;
+package Model;
 
 /**
  * In House part class

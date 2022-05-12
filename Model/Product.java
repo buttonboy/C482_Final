@@ -1,8 +1,8 @@
-package Inventory;
+package Model;
 /**
  * Product information with associated Parts
  * 
- * @auther Matt Goldstine
+ * @author Matt Goldstine
  */
 
 import javafx.collections.FXCollections;

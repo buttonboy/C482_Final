@@ -1,4 +1,4 @@
-package Inventory;
+package Model;
 
 public class Outsourced extends Part{
     
