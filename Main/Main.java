@@ -49,41 +49,6 @@ public class Main extends Application {
         Product Projector = new Product(Inventory.createProductID(), "Wemax Nova", 2000, 10, 2, 20);
         Inventory.addProduct(Projector);
 
-
-
-       /*  //partId = Model.getNewPartId();
-        int id = 0;
-        InHouse tvScreen = new InHouse(id,"TV Screen", 300.00, 5, 1, 20,
-                101);
-        //partId = Model.getNewPartId();
-        id = 1;
-        InHouse tvShell = new InHouse(id,"TV Shell", 100.00, 5, 1, 20,
-                101);
-        //partId = Model.getNewPartId();
-        id = 2;
-        InHouse powerCord = new InHouse(id,"Power Cord", 2.99, 5, 1, 20,
-                101);
-        //partId = Model.getNewPartId();
-        id = 3;
-        Outsourced remote = new Outsourced(id, "Remote Control",29.99, 50, 30,
-                100, "Panasonic");
-        Model.addPart(tvScreen);
-        Model.addPart(tvShell);
-        Model.addPart(powerCord);
-        Model.addPart(remote);
-
-        //Add sample product
-        //int productId = Model.getNewProductId();
-        id = 0;
-        Product television = new Product(id, "LCD Television", 499.99, 20, 20,
-                100);
-        television.addAssociatedPart(tvScreen);
-        television.addAssociatedPart(tvShell);
-        television.addAssociatedPart(powerCord);
-        television.addAssociatedPart(remote);
-        Model.addProduct(television); */
-
-        //System.out.println("Application starting");
         launch(args);
     }
 }

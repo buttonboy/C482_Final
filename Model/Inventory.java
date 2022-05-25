@@ -169,7 +169,7 @@ public class Inventory {
 
     public static int createProductID(){
         int id = allProducts.size();
-        while(lookupPart(id) != null){
+        while(lookupProduct(id) != null){
             ++id;
         }
 

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.EditPartController">
+   <children>
+      <Label layoutX="35.0" layoutY="24.0" style="-fx-font-weight: bold;" text="Inventory Management System">
+         <font>
+            <Font size="38.0" />
+         </font>
+      </Label>
+      <Button layoutX="822.0" layoutY="509.0" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
+      <Label layoutX="92.0" layoutY="86.0" style="-fx-font-weight: bold;" text="Edit Part">
+         <font>
+            <Font name="System Italic" size="28.0" />
+         </font>
+      </Label>
+      <RadioButton fx:id="inHouseRadioButton" layoutX="92.0" layoutY="159.0" mnemonicParsing="false" onAction="#inHouseRadioButtonAction" text="In-House">
+         <toggleGroup>
+            <ToggleGroup fx:id="tgPartType" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="outsourcedRadioButton" layoutX="218.0" layoutY="159.0" mnemonicParsing="false" onAction="#outsourcedRadioButtonAction" text="Outsourced" toggleGroup="$tgPartType" />
+      <Button layoutX="762.0" layoutY="509.0" mnemonicParsing="false" onAction="#saveButtonAction" text="Save" />
+      <GridPane layoutX="105.0" layoutY="210.0" prefHeight="209.0" prefWidth="257.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="113.0" minWidth="10.0" prefWidth="94.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0" prefWidth="106.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TextField fx:id="idInput" editable="false" promptText="Optional" GridPane.columnIndex="1" />
+            <Label text="ID" />
+            <TextField fx:id="nameInput" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="Name" GridPane.rowIndex="1" />
+            <TextField fx:id="stockInput" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Stock" GridPane.rowIndex="2" />
+            <TextField fx:id="priceInput" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Price" GridPane.rowIndex="3" />
+            <Label text="Min/Max Stock" GridPane.rowIndex="4" />
+            <HBox GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <children>
+                  <TextField fx:id="minInput">
+                     <HBox.margin>
+                        <Insets right="2.0" top="4.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <TextField fx:id="maxInput">
+                     <HBox.margin>
+                        <Insets left="2.0" top="4.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+            </HBox>
+            <Label fx:id="machineCompLabel" text="Machine ID" GridPane.rowIndex="5" />
+            <TextField fx:id="machineCompInput" prefWidth="134.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>

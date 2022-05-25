@@ -403,9 +403,9 @@ public class MainController implements Initializable {
      * @param event Action Event for obtain current Window
      * @throws IOException
      */
-    private void loadPage(String page, ActionEvent event)throws IOException{
+    public static void loadPage(String page, ActionEvent event)throws IOException{
         page = "../View/" + page + ".fxml";
-        Parent parent = FXMLLoader.load(getClass().getResource(page));
+        Parent parent = FXMLLoader.load(MainController.class.getResource(page));
         Scene scene = new Scene(parent);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);

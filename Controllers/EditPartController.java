@@ -2,28 +2,37 @@ package Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.shape.VLineTo;
 import javafx.fxml.Initializable;
+import javafx.stage.Stage;
+import Model.InHouse;
+import Model.Inventory;
+import Model.Outsourced;
+import Model.Part;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import Model.InHouse;
-import Model.Inventory;
-import Model.Outsourced;
-import Model.Part;
-
 /**
- * Controller class for Add Part Page.
+ * Controller for Editing Parts
  *
  * @author Matt Goldstine
  */
-public class AddPartController implements Initializable {
+public class EditPartController implements Initializable {
 
+    /**
+     * Part that was Selected
+     */
+    private Part selectedPart;
 
-    
+        
     /**
      * Part Type Toggle Group
      */
@@ -152,10 +161,8 @@ public class AddPartController implements Initializable {
             String compName;
             boolean partAddSuccessful = false;
 
-            if (name.isEmpty()) {
-                Alerts.error(Alerts.Errors.INVALID_NAME);
-            } else {
-                if (minValid(min, max) && stockValid(min, max, stock)) {
+            if (Validate.name(name)){
+                if (Validate.minimum(min, max) && Validate.stock(min, max, stock)) {
 
                     if (inHouseRadioButton.isSelected()) {
                         try {
@@ -199,48 +206,7 @@ public class AddPartController implements Initializable {
     }
 
     /**
-     * Validates that min is greater than 0 and less than max.
-     *
-     * @param min The minimum value for the part.
-     * @param max The maximum value for the part.
-     * @return Boolean indicating if min is valid.
-     */
-    private boolean minValid(int min, int max) {
-
-        boolean isValid = true;
-
-        if (min <= 0 || min >= max) {
-            isValid = false;
-            Alerts.error(Alerts.Errors.INVALID_MIN);
-        }
-
-        return isValid;
-    }
-
-    /**
-     * Validates that stock is equal too or within min and max.
-     *
-     * @param min The minimum value for the part.
-     * @param max The maximum value for the part.
-     * @param stock The stock for the part.
-     * @return Boolean Is Stock Valid
-     */
-    private boolean stockValid(int min, int max, int stock) {
-
-        boolean isValid = true;
-
-        if (stock < min || stock > max) {
-            isValid = false;
-            Alerts.error(Alerts.Errors.INVALID_STOCK);
-        }
-
-        return isValid;
-    }
-
-    
-
-    /**
-     * Initializes controller and sets in-house radio button to true.
+     * Initializes controller and populates text fields with part selected in MainScreenController.
      *
      * @param location The location used to resolve relative paths for the root object, or null if the location is not known.
      * @param resources The resources used to localize the root object, or null if the root object was not localized.
@@ -248,6 +214,25 @@ public class AddPartController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        inHouseRadioButton.setSelected(true);
+        selectedPart = MainController.getPartToEdit();
+
+        if (selectedPart instanceof InHouse) {
+            inHouseRadioButton.setSelected(true);
+            machineCompInput.setText("Machine ID");
+            machineCompLabel.setText(String.valueOf(((InHouse) selectedPart).getMachineId()));
+        }
+
+        if (selectedPart instanceof Outsourced){
+            outsourcedRadioButton.setSelected(true);
+            machineCompLabel.setText("Company Name");
+            machineCompInput.setText(((Outsourced) selectedPart).getCompanyName());
+        }
+
+        idInput.setText(String.valueOf(selectedPart.getId()));
+        nameInput.setText(selectedPart.getName());
+        stockInput.setText(String.valueOf(selectedPart.getStock()));
+        priceInput.setText(String.valueOf(selectedPart.getPrice()));
+        maxInput.setText(String.valueOf(selectedPart.getMax()));
+        minInput.setText(String.valueOf(selectedPart.getMin()));
     }
 }
