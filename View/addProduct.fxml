@@ -25,7 +25,7 @@
          <columns>
             <TableColumn fx:id="assocPartIdColumn" prefWidth="70.0" text="ID" />
             <TableColumn fx:id="assocPartNameColumn" prefWidth="157.0" text="Name" />
-            <TableColumn fx:id="assocPartInventoryColumn" prefWidth="75.0" text="Stock" />
+            <TableColumn fx:id="assocPartStockColumn" prefWidth="75.0" text="Stock" />
             <TableColumn fx:id="assocPartPriceColumn" prefWidth="58.0" text="Price" />
          </columns>
          <columnResizePolicy>
@@ -36,7 +36,7 @@
         <columns>
           <TableColumn fx:id="partIdColumn" prefWidth="69.0" text="ID" />
             <TableColumn fx:id="partNameColumn" prefWidth="158.0" text="Name" />
-            <TableColumn fx:id="partInventoryColumn" prefWidth="75.0" text="Stock" />
+            <TableColumn fx:id="partStockColumn" prefWidth="75.0" text="Stock" />
             <TableColumn fx:id="partPriceColumn" prefWidth="58.0" text="Price" />
         </columns>
          <columnResizePolicy>
@@ -47,7 +47,7 @@
       <Button layoutX="838.0" layoutY="545.0" mnemonicParsing="false" onAction="#saveButtonAction" text="Save" />
       <Button layoutX="763.0" layoutY="300.0" mnemonicParsing="false" onAction="#removeButtonAction" text="↑" />
       <Button layoutX="711.0" layoutY="300.0" mnemonicParsing="false" onAction="#addButtonAction" text="↓" />
-      <Label layoutX="38.0" layoutY="71.0" style="-fx-font-weight: bold;" text="Add Part">
+      <Label layoutX="38.0" layoutY="71.0" style="-fx-font-weight: bold;" text="Add Product">
          <font>
             <Font name="System Italic" size="28.0" />
          </font>
@@ -62,20 +62,19 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label text="ID" />
-            <TextField fx:id="idInput" editable="false" promptText="Optional" GridPane.columnIndex="1" />
+            <TextField fx:id="idInput" editable="false" promptText="Disabled - Pregenerated" GridPane.columnIndex="1" />
             <Label text="Name" GridPane.rowIndex="1" />
             <TextField fx:id="nameInput" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Inventory" GridPane.rowIndex="2" />
-            <TextField fx:id="inventoryInput" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label text="Price" GridPane.rowIndex="3" />
-            <TextField fx:id="priceInput" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Min/Max Stock" GridPane.rowIndex="4" />
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Label text="Stock" GridPane.rowIndex="2" />
+            <TextField fx:id="stockInput" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Price" GridPane.rowIndex="4" />
+            <Label text="Min/Max Stock" GridPane.rowIndex="3" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>
                   <TextField fx:id="minInput">
                      <HBox.margin>
@@ -89,6 +88,7 @@
                   </TextField>
                </children>
             </HBox>
+            <TextField fx:id="priceInput" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
       </GridPane>
    </children>

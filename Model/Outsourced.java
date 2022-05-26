@@ -1,5 +1,8 @@
 package Model;
 
+/**
+ * Class for Outsources parts
+ */
 public class Outsourced extends Part{
     
     /**

@@ -158,6 +158,10 @@ public class Inventory {
         return allProducts;
     }
 
+    /**
+     * Generate new ID for Part
+     * @return
+     */
     public static int createPartID(){
         int id = allParts.size();
         while(lookupPart(id) != null){
@@ -167,6 +171,10 @@ public class Inventory {
         return id;
     }
 
+    /**
+     * Generate new ID for Product
+     * @return
+     */
     public static int createProductID(){
         int id = allProducts.size();
         while(lookupProduct(id) != null){

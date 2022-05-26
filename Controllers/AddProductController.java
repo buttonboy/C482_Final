@@ -4,17 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
 import javafx.fxml.Initializable;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 import Model.Inventory;
 import Model.Part;
 import Model.Product;
@@ -25,121 +18,126 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * Controller class that provides control logic for the add product screen of the application.
+ * Controller for Add Product Page
  *
  * @author Matt Goldstine
  */
 public class AddProductController implements Initializable {
 
     /**
-     * A list containing parts associated with the product.
+     * List of parts associated with product.
      */
     private ObservableList<Part> assocParts = FXCollections.observableArrayList();
 
     /**
-     * The associated parts table view.
+     * List of parts associated not with product.
+     */
+    private ObservableList<Part> unusedParts = FXCollections.observableArrayList();
+
+    /**
+     * Table of parts associated with product.
      */
     @FXML
     private TableView<Part> assocPartTableView;
 
     /**
-     * The part ID column for the associated parts table.
+     * ID column for associated parts table.
      */
     @FXML
     private TableColumn<Part, Integer> assocPartIdColumn;
 
     /**
-     * The part name column for the associated parts table.
+     * Name column for associated parts table.
      */
     @FXML
     private TableColumn<Part, String> assocPartNameColumn;
 
     /**
-     * The inventory level column for the associated parts table.
+     * Stock column for associated parts table.
      */
     @FXML
-    private TableColumn<Part, Integer> assocPartInventoryColumn;
+    private TableColumn<Part, Integer> assocPartStockColumn;
 
     /**
-     * The price column for the associated parts table.
+     * Price column for associated parts table.
      */
     @FXML
     private TableColumn<Part, Double> assocPartPriceColumn;
 
     /**
-     * The all parts table view.
+     * Parts table view.
      */
     @FXML
     private TableView<Part> partTableView;
 
     /**
-     * The part ID column for the all parts table.
+     * ID column for parts table.
      */
     @FXML
     private TableColumn<Part, Integer> partIdColumn;
 
     /**
-     * The name column for the all parts table.
+     * Name column for parts table.
      */
     @FXML
     private TableColumn<Part, String> partNameColumn;
 
     /**
-     * The inventory level column for the all parts table.
+     * Stock column for parts table.
      */
     @FXML
-    private TableColumn<Part, Integer> partInventoryColumn;
+    private TableColumn<Part, Integer> partStockColumn;
 
     /**
-     * The price column for the all parts table.
+     * Price column for the all parts table.
      */
     @FXML
     private TableColumn<Part, Double> partPriceColumn;
 
     /**
-     * The part search text field.
+     * Part search input.
      */
     @FXML
     private TextField partSearchInput;
 
     /**
-     * The product ID text field.
+     * ID Input.
      */
     @FXML
     private TextField idInput;
 
     /**
-     * The product name text field.
+     * Name Input.
      */
     @FXML
     private TextField nameInput;
 
     /**
-     * The product inventory level text field.
+     * Stock Input.
      */
     @FXML
-    private TextField inventoryInput;
+    private TextField stockInput;
 
     /**
-     * The product price text field.
+     * Price Input.
      */
     @FXML
     private TextField priceInput;
 
     /**
-     * The product maximum level text field.
+     * Max Stock Input
      */
     @FXML
     private TextField maxInput;
 
     /**
-     * The product minimum level text field.
+     * Min Stock Input
      */
     @FXML
     private TextField minInput;
 
     /**
-     * Adds part object selected in the all parts table to the associated parts table.
+     * Add part object selected in the Parts Table to the Associated Parts Table.
      *
      * Displays error message if no part is selected.
      *
@@ -153,26 +151,25 @@ public class AddProductController implements Initializable {
         if (selectedPart == null) {
             Alerts.error(Alerts.Errors.PART_NOT_SELECTED);
         } else {
+            unusedParts.remove(selectedPart);
             assocParts.add(selectedPart);
             assocPartTableView.setItems(assocParts);
         }
     }
 
     /**
-     * Displays confirmation dialog and loads MainScreenController.
+     * Confirmation dialog before loading Main Page.
      *
      * @param event Cancel button action.
-     * @throws IOException From FXMLLoader.
+     * @throws IOException FXMLLoader.
      */
     @FXML
     void cancelButtonAction(ActionEvent event) throws IOException {
+        
+        Alert dialog = Alerts.confirm(Alerts.Confirm.RETURN_TO_MAIN);
+        Optional<ButtonType> answer = dialog.showAndWait();
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Alert");
-        alert.setContentText("Do you want cancel changes and return to the main screen?");
-        Optional<ButtonType> result = alert.showAndWait();
-
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+        if (answer.isPresent() && answer.get() == ButtonType.OK) {
             returnToMainPage(event);
         }
     }
@@ -188,7 +185,7 @@ public class AddProductController implements Initializable {
     @FXML
     void partSearchBtnAction(ActionEvent event) {
 
-        ObservableList<Part> allParts = Inventory.getAllParts();
+        ObservableList<Part> allParts = unusedParts;
         ObservableList<Part> partsFound = FXCollections.observableArrayList();
         String searchString = partSearchInput.getText();
 
@@ -201,9 +198,9 @@ public class AddProductController implements Initializable {
 
         partTableView.setItems(partsFound);
 
-        if (partsFound.size() == 0) {
+    /*  if (partsFound.size() == 0) {
             Alerts.error(Alerts.Errors.PRODUCT_ADD_FAIL);
-        }
+        } */
     }
 
     /**
@@ -215,7 +212,8 @@ public class AddProductController implements Initializable {
     void partSearchKeyPressed(KeyEvent event) {
 
         if (partSearchInput.getText().isEmpty()) {
-            partTableView.setItems(Inventory.getAllParts());
+            determineUnusedParts();
+            partTableView.setItems(unusedParts);
         }
     }
 
@@ -235,22 +233,21 @@ public class AddProductController implements Initializable {
             Alerts.error(Alerts.Errors.PART_NOT_SELECTED);
         } else {
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Alert");
-            alert.setContentText("Do you want to remove the selected part?");
-            Optional<ButtonType> result = alert.showAndWait();
+            Alert dialog = Alerts.confirm(Alerts.Confirm.CONFIRM_PART_REMOVE);
+            Optional<ButtonType> answer = dialog.showAndWait();
 
-            if (result.isPresent() && result.get() == ButtonType.OK) {
+            if (answer.isPresent() && answer.get() == ButtonType.OK) {
                 assocParts.remove(selectedPart);
+                unusedParts.add(selectedPart);
                 assocPartTableView.setItems(assocParts);
             }
         }
     }
 
     /**
-     * Adds new product to inventory and loads MainScreenController.
+     * Adds new product and loads MainController.
      *
-     * Text fields are validated with error messages displayed preventing empty and/or
+     * Validate Inputs and display error messages
      * invalid values.
      *
      * @param event Save button action.
@@ -260,16 +257,15 @@ public class AddProductController implements Initializable {
     void saveButtonAction(ActionEvent event) throws IOException {
 
         try {
-            int id = Integer.parseInt(idInput.getText());;
+            int id = (idInput.getLength() > 0)? Integer.parseInt(idInput.getText()): Inventory.createProductID();
             String name = nameInput.getText();
             Double price = Double.parseDouble(priceInput.getText());
-            int stock = Integer.parseInt(inventoryInput.getText());
+            int stock = Integer.parseInt(stockInput.getText());
             int min = Integer.parseInt(minInput.getText());
             int max = Integer.parseInt(maxInput.getText());
 
-            if(Validate.productID(id)){
-                
-            }
+            //If Entered ID is already used generate new one.
+            id = (Validate.productID(id))? id : Inventory.createProductID();
 
             if (Validate.name(name)) {
                 if (Validate.minimum(min, max) && Validate.stock(min, max, stock)) {
@@ -280,13 +276,21 @@ public class AddProductController implements Initializable {
                         newProduct.addAssociatedPart(part);
                     }
 
-                    newProduct.setID(Inventory.createProductID());
                     Inventory.addProduct(newProduct);
                     returnToMainPage(event);
                 }
             }
         } catch (Exception e){
             Alerts.error(Alerts.Errors.PRODUCT_ADD_FAIL);
+        }
+    }
+
+    private void determineUnusedParts(){
+        unusedParts = Inventory.getAllParts();
+        for(Part p: unusedParts){
+            if(assocParts.contains(p)){
+                unusedParts.remove(p);
+            }
         }
     }
 
@@ -303,7 +307,7 @@ public class AddProductController implements Initializable {
 
 
     /**
-     * Initializes controller and populates table views.
+     * Initializes controller and generates table data
      *
      * @param location The location used to resolve relative paths for the root object, or null if the location is not known.
      * @param resources The resources used to localize the root object, or null if the root object was not localized.
@@ -313,13 +317,14 @@ public class AddProductController implements Initializable {
 
         partIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         partNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        partInventoryColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        partStockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
         partPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        partTableView.setItems(Inventory.getAllParts());
+        determineUnusedParts();
+        partTableView.setItems(unusedParts);
 
         assocPartIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         assocPartNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        assocPartInventoryColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        assocPartStockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
         assocPartPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
     }

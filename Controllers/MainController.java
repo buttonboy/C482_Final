@@ -171,15 +171,13 @@ public class MainController implements Initializable {
         Part selectedPart = partTable.getSelectionModel().getSelectedItem();
 
         if (selectedPart == null) {
-            showAlert(3);
+            Alerts.error(Alerts.Errors.PART_NOT_SELECTED);
         } else {
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Alert");
-            alert.setContentText("Do you want to delete the selected part?");
-            Optional<ButtonType> result = alert.showAndWait();
+            Alert dialog = Alerts.confirm(Alerts.Confirm.CONFIRM_DELETE_PART);
+            Optional<ButtonType> answer = dialog.showAndWait();
 
-            if (result.isPresent() && result.get() == ButtonType.OK) {
+            if (answer.isPresent() && answer.get() == ButtonType.OK) {
                 Inventory.deletePart(selectedPart);
             }
         }
@@ -199,7 +197,7 @@ public class MainController implements Initializable {
         partToEdit = partTable.getSelectionModel().getSelectedItem();
 
         if (partToEdit == null) {
-            showAlert(3);
+            Alerts.error(Alerts.Errors.PART_NOT_SELECTED);
         } else {
             loadPage("EditPart", event);
         }
@@ -230,7 +228,7 @@ public class MainController implements Initializable {
         partTable.setItems(partsFound);
 
         if (partsFound.size() == 0) {
-            showAlert(1);
+            Alerts.error(Alerts.Errors.PART_NOT_FOUND);
         }
     }
 
@@ -274,20 +272,18 @@ public class MainController implements Initializable {
         Product selectedProduct = productTable.getSelectionModel().getSelectedItem();
 
         if (selectedProduct == null) {
-            showAlert(4);
+            Alerts.error(Alerts.Errors.PRODUCT_NOT_SELECTED);
         } else {
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Alert");
-            alert.setContentText("Do you want to delete the selected product?");
-            Optional<ButtonType> result = alert.showAndWait();
+            Alert dialog = Alerts.confirm(Alerts.Confirm.CONFIRM_DELETE_PRODUCT);
+            Optional<ButtonType> answer = dialog.showAndWait();
 
-            if (result.isPresent() && result.get() == ButtonType.OK) {
+            if (answer.isPresent() && answer.get() == ButtonType.OK) {
 
                 ObservableList<Part> assocParts = selectedProduct.getAllAssociatedParts();
 
                 if (assocParts.size() >= 1) {
-                    showAlert(5);
+                    Alerts.error(Alerts.Errors.PART_IN_USE);
                 } else {
                     Inventory.deleteProduct(selectedProduct);
                 }
@@ -309,7 +305,7 @@ public class MainController implements Initializable {
         productToEdit = productTable.getSelectionModel().getSelectedItem();
 
         if (productToEdit == null) {
-            showAlert(4);
+            Alerts.error(Alerts.Errors.PRODUCT_NOT_SELECTED);
         } else {
             loadPage("EditProduct", event);
         }
@@ -340,7 +336,7 @@ public class MainController implements Initializable {
         productTable.setItems(productsFound);
 
         if (productsFound.size() == 0) {
-            showAlert(2);
+            Alerts.error(Alerts.Errors.PRODUCT_NOT_FOUND);
         }
     }
 
@@ -354,46 +350,6 @@ public class MainController implements Initializable {
 
         if (productSearch.getText().isEmpty()) {
             productTable.setItems(Inventory.getAllProducts());
-        }
-    }
-
-    /**
-     * Displays various alert messages.
-     *
-     * @param alertType Alert message selector.
-     */
-    private void showAlert(int alertType) {
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        Alert alertError = new Alert(Alert.AlertType.ERROR);
-
-        switch (alertType) {
-            case 1:
-                alert.setTitle("Information");
-                alert.setHeaderText("Part not found");
-                alert.showAndWait();
-                break;
-            case 2:
-                alert.setTitle("Information");
-                alert.setHeaderText("Product not found");
-                alert.showAndWait();
-                break;
-            case 3:
-                alertError.setTitle("Error");
-                alertError.setHeaderText("Part not selected");
-                alertError.showAndWait();
-                break;
-            case 4:
-                alertError.setTitle("Error");
-                alertError.setHeaderText("Product not selected");
-                alertError.showAndWait();
-                break;
-            case 5:
-                alertError.setTitle("Error");
-                alertError.setHeaderText("Parts Associated");
-                alertError.setContentText("All parts must be removed from product before deletion.");
-                alertError.showAndWait();
-                break;
         }
     }
 

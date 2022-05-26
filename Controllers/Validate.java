@@ -35,6 +35,11 @@ public class Validate {
         return true;
     }
 
+    /**
+     * Make sure name string is not blank of empty
+     * @param name name to check
+     * @return bool if name is valid
+     */
     public static boolean name(String name){
         if(name.isEmpty() || name.isBlank()){
             Alerts.error(Alerts.Errors.INVALID_NAME);
@@ -43,8 +48,26 @@ public class Validate {
         return true;
     }
 
+    /**
+     * Check if product ID already exists
+     * @param id ID to Validate
+     * @return bool if ID can be used
+     */
     public static boolean productID(int id){
         if(Inventory.lookupProduct(id) != null){
+            Alerts.error(Alerts.Errors.INVALID_ID);
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * Check if part ID already exists
+     * @param id ID to Validate
+     * @return bool if ID can be used
+     */
+    public static boolean partID(int id){
+        if(Inventory.lookupPart(id) != null){
             Alerts.error(Alerts.Errors.INVALID_ID);
             return false;
         }

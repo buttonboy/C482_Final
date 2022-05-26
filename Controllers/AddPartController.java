@@ -13,7 +13,6 @@ import java.util.ResourceBundle;
 import Model.InHouse;
 import Model.Inventory;
 import Model.Outsourced;
-import Model.Part;
 
 /**
  * Controller class for Add Part Page.
@@ -142,7 +141,7 @@ public class AddPartController implements Initializable {
     void saveButtonAction(ActionEvent event) throws IOException {
 
         try {
-            int id = 0;
+            int id = (idInput.getLength() > 0)? Integer.parseInt(idInput.getText()): Inventory.createPartID();
             String name = nameInput.getText();
             Double price = Double.parseDouble(priceInput.getText());
             int stock = Integer.parseInt(stockInput.getText());
@@ -152,16 +151,16 @@ public class AddPartController implements Initializable {
             String compName;
             boolean partAddSuccessful = false;
 
-            if (name.isEmpty()) {
-                Alerts.error(Alerts.Errors.INVALID_NAME);
-            } else {
-                if (minValid(min, max) && stockValid(min, max, stock)) {
+            //If Entered ID is already used generate new one.
+            id = (Validate.partID(id))? id : Inventory.createPartID();
+
+            if (Validate.name(name)) {
+                if (Validate.minimum(min, max) && Validate.stock(min, max, stock)) {
 
                     if (inHouseRadioButton.isSelected()) {
                         try {
                             machineId = Integer.parseInt(machineCompInput.getText());
                             InHouse newInHousePart = new InHouse(id, name, price, stock, min, max, machineId);
-                            newInHousePart.setId(Inventory.createPartID());
                             Inventory.addPart(newInHousePart);
                             partAddSuccessful = true;
                         } catch (Exception e) {
@@ -172,7 +171,6 @@ public class AddPartController implements Initializable {
                     if (outsourcedRadioButton.isSelected()) {
                         compName = machineCompInput.getText();
                         Outsourced newOutsourcedPart = new Outsourced(id, name, price, stock, min, max, compName);
-                        newOutsourcedPart.setId(Inventory.createPartID());
                         Inventory.addPart(newOutsourcedPart);
                         partAddSuccessful = true;
                     }
@@ -198,46 +196,6 @@ public class AddPartController implements Initializable {
         MainController.loadPage("Main", event);
     }
 
-    /**
-     * Validates that min is greater than 0 and less than max.
-     *
-     * @param min The minimum value for the part.
-     * @param max The maximum value for the part.
-     * @return Boolean indicating if min is valid.
-     */
-    private boolean minValid(int min, int max) {
-
-        boolean isValid = true;
-
-        if (min <= 0 || min >= max) {
-            isValid = false;
-            Alerts.error(Alerts.Errors.INVALID_MIN);
-        }
-
-        return isValid;
-    }
-
-    /**
-     * Validates that stock is equal too or within min and max.
-     *
-     * @param min The minimum value for the part.
-     * @param max The maximum value for the part.
-     * @param stock The stock for the part.
-     * @return Boolean Is Stock Valid
-     */
-    private boolean stockValid(int min, int max, int stock) {
-
-        boolean isValid = true;
-
-        if (stock < min || stock > max) {
-            isValid = false;
-            Alerts.error(Alerts.Errors.INVALID_STOCK);
-        }
-
-        return isValid;
-    }
-
-    
 
     /**
      * Initializes controller and sets in-house radio button to true.

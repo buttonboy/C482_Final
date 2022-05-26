@@ -2,14 +2,8 @@ package Controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.shape.VLineTo;
 import javafx.fxml.Initializable;
-import javafx.stage.Stage;
 import Model.InHouse;
 import Model.Inventory;
 import Model.Outsourced;
@@ -151,7 +145,7 @@ public class EditPartController implements Initializable {
     void saveButtonAction(ActionEvent event) throws IOException {
 
         try {
-            int id = 0;
+            int id = (idInput.getLength() > 0)? Integer.parseInt(idInput.getText()): Inventory.createPartID();
             String name = nameInput.getText();
             Double price = Double.parseDouble(priceInput.getText());
             int stock = Integer.parseInt(stockInput.getText());
@@ -161,6 +155,9 @@ public class EditPartController implements Initializable {
             String compName;
             boolean partAddSuccessful = false;
 
+            //If Entered ID is already used generate new one.
+            id = (Validate.partID(id))? id : Inventory.createPartID();
+
             if (Validate.name(name)){
                 if (Validate.minimum(min, max) && Validate.stock(min, max, stock)) {
 
@@ -168,7 +165,6 @@ public class EditPartController implements Initializable {
                         try {
                             machineId = Integer.parseInt(machineCompInput.getText());
                             InHouse newInHousePart = new InHouse(id, name, price, stock, min, max, machineId);
-                            newInHousePart.setId(Inventory.createPartID());
                             Inventory.addPart(newInHousePart);
                             partAddSuccessful = true;
                         } catch (Exception e) {
@@ -179,7 +175,6 @@ public class EditPartController implements Initializable {
                     if (outsourcedRadioButton.isSelected()) {
                         compName = machineCompInput.getText();
                         Outsourced newOutsourcedPart = new Outsourced(id, name, price, stock, min, max, compName);
-                        newOutsourcedPart.setId(Inventory.createPartID());
                         Inventory.addPart(newOutsourcedPart);
                         partAddSuccessful = true;
                     }
@@ -218,8 +213,8 @@ public class EditPartController implements Initializable {
 
         if (selectedPart instanceof InHouse) {
             inHouseRadioButton.setSelected(true);
-            machineCompInput.setText("Machine ID");
-            machineCompLabel.setText(String.valueOf(((InHouse) selectedPart).getMachineId()));
+            machineCompLabel.setText("Machine ID");
+            machineCompInput.setText(String.valueOf(((InHouse) selectedPart).getMachineId()));
         }
 
         if (selectedPart instanceof Outsourced){

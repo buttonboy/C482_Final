@@ -8,12 +8,13 @@ import javafx.scene.control.ChoiceDialog;
 public class Alerts {
 
     public static enum Errors {
-        PART_ADD_FAIL,INVALID_MACHINEID,INVALID_MIN,INVALID_NAME,INVALID_STOCK, PRODUCT_ADD_FAIL, PART_NOT_FOUND, PART_NOT_SELECTED, INVALID_ID
+        PART_ADD_FAIL,INVALID_MACHINEID,INVALID_MIN,INVALID_NAME,INVALID_STOCK, 
+        PRODUCT_ADD_FAIL, PART_NOT_FOUND, PART_NOT_SELECTED, INVALID_ID, PRODUCT_NOT_FOUND, PRODUCT_NOT_SELECTED, PART_IN_USE
 
     }
 
     public static enum Confirm {
-        RETURN_TO_MAIN
+        RETURN_TO_MAIN, CONFIRM_PART_REMOVE, CONFIRM_DELETE_PRODUCT, CONFIRM_DELETE_PART
     }
 
     //private Errors getErrorType
@@ -59,9 +60,9 @@ public class Alerts {
                 dialog.showAndWait();
                 break;
             case INVALID_ID:
-                dialog.setTitle("Error");
+                dialog.setTitle("Information");
                 dialog.setHeaderText("ID already Exists");
-                dialog.setContentText("This ID is already used by another Item.");
+                dialog.setContentText("This ID is already in use. A new ID will be generated");
                 dialog.showAndWait();
                 break;
             case PRODUCT_ADD_FAIL:
@@ -80,6 +81,22 @@ public class Alerts {
                 dialog.setHeaderText("No Part Selected");
                 dialog.showAndWait();
                 break;
+            case PRODUCT_NOT_FOUND:
+                dialog.setTitle("Information");
+                dialog.setHeaderText("Product Not Found");
+                dialog.showAndWait();
+                break;
+            case PRODUCT_NOT_SELECTED:
+                dialog.setTitle("Error");
+                dialog.setHeaderText("Product Not Selected");
+                dialog.showAndWait();
+                break;
+            case PART_IN_USE:
+                dialog.setTitle("Error");
+                dialog.setHeaderText("Parts Is Being Used");
+                dialog.setContentText("All parts must be removed from products before the can be removed.");
+                dialog.showAndWait();
+                break;
         }
     }
 
@@ -92,9 +109,18 @@ public class Alerts {
                 dialog.setTitle("Alert");
                 dialog.setContentText("Return to main page without saving?");
                 break;
-            default:
+            case CONFIRM_PART_REMOVE:
                 dialog.setTitle("Alert");
-                dialog.setContentText("Make a Choice");
+                dialog.setContentText("Remove Selected Part from Associated Parts?");
+                break;
+            case CONFIRM_DELETE_PRODUCT:
+                dialog.setTitle("Alert");
+                dialog.setContentText("Are you sure you want to delete this Product?");
+                break;
+            case CONFIRM_DELETE_PART:
+                dialog.setTitle("Alert");
+                dialog.setContentText("Are you sure you want to delete this Part?");
+                break;
         }
 
         return dialog;

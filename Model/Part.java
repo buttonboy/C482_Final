@@ -4,7 +4,7 @@ package Model;
  */
 
 /**
- *
+ *  Class Containing Part information and classes
  * @author Matthew Goldstine
  */
 public abstract class Part {

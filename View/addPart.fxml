@@ -46,7 +46,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <TextField fx:id="idInput" editable="false" promptText="Optional" GridPane.columnIndex="1" />
+            <TextField fx:id="idInput" editable="false" promptText="Disabled - Pregenerated" GridPane.columnIndex="1" />
             <Label text="ID" />
             <TextField fx:id="nameInput" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Name" GridPane.rowIndex="1" />
