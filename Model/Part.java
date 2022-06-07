@@ -15,7 +15,15 @@ public abstract class Part {
     private int min;
     private int max;    
     
-    
+    /**
+     * Main Constructor Class
+     * @param id ID of Part
+     * @param name Name of Part
+     * @param price Price of Part
+     * @param stock Current Stock Amount of Part
+     * @param min Min Stock Amount of Part
+     * @param max Max Stock Amount of Part 
+     */
     public Part(int id, String name, double price, int stock, int min, int max) {
         this.id = id;
         this.name = name;

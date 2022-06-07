@@ -17,13 +17,20 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import Main.Main;
+
 /**
- * Controller for Add Product Page
+ * Controller for Edit Product Page
  *
  * @author Matt Goldstine
  */
-public class AddProductController implements Initializable {
+public class EditProductController implements Initializable {
 
+     /**
+     * Product that was Selected
+     */
+    private Product selectedProduct;
+    
     /**
      * List of parts associated with product.
      */
@@ -212,8 +219,8 @@ public class AddProductController implements Initializable {
     void partSearchKeyPressed(KeyEvent event) {
 
         if (partSearchInput.getText().isEmpty()) {
-            determineUnusedParts();
             partTableView.setItems(unusedParts);
+            determineUnusedParts();
         }
     }
 
@@ -238,7 +245,9 @@ public class AddProductController implements Initializable {
 
             if (answer.isPresent() && answer.get() == ButtonType.OK) {
                 assocParts.remove(selectedPart);
-                unusedParts.add(selectedPart);
+                if(!partTableView.getItems().contains(selectedPart)){
+                    partTableView.getItems().add(selectedPart);
+                }
                 assocPartTableView.setItems(assocParts);
             }
         }
@@ -257,15 +266,12 @@ public class AddProductController implements Initializable {
     void saveButtonAction(ActionEvent event) throws IOException {
 
         try {
-            int id = (idInput.getLength() > 0)? Integer.parseInt(idInput.getText()): Inventory.createProductID();
+            int id = selectedProduct.getId();
             String name = nameInput.getText();
             Double price = Double.parseDouble(priceInput.getText());
             int stock = Integer.parseInt(stockInput.getText());
             int min = Integer.parseInt(minInput.getText());
             int max = Integer.parseInt(maxInput.getText());
-
-            //If Entered ID is already used generate new one.
-            id = (Validate.productID(id))? id : Inventory.createProductID();
 
             if (Validate.name(name)) {
                 if (Validate.minimum(min, max) && Validate.stock(min, max, stock)) {
@@ -278,6 +284,8 @@ public class AddProductController implements Initializable {
                     newProduct.setStock(stock);
 
                     Inventory.addProduct(newProduct);
+                    Inventory.deleteProduct(selectedProduct);
+                    //reassociateUnusedParts();
                     returnToMainPage(event);
                 }
             }
@@ -287,10 +295,28 @@ public class AddProductController implements Initializable {
     }
 
     private void determineUnusedParts(){
+        
+        for(Part p: unusedParts){
+            if(assocParts.contains(p)){
+                partTableView.getItems().remove(p);
+            }
+        }
+    }
+    
+    private void determineUnusedPartOLD(){
         unusedParts = Inventory.getAllParts();
+        
         for(Part p: unusedParts){
             if(assocParts.contains(p)){
                 unusedParts.remove(p);
+            }
+        }
+    }
+
+    private void reassociateUnusedParts(){
+        for(Part p: assocParts){
+            if(!unusedParts.contains(p)){
+                unusedParts.add(p);
             }
         }
     }
@@ -318,17 +344,31 @@ public class AddProductController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        selectedProduct = MainController.getProductToEdit();
+        unusedParts = Inventory.getAllParts();
+        assocParts = selectedProduct.getAllAssociatedParts();
+        partTableView.setItems(unusedParts);
+        assocPartTableView.setItems(assocParts);
+        
+        determineUnusedParts();
+        
         partIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         partNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         partStockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
         partPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        determineUnusedParts();
-        partTableView.setItems(unusedParts);
+        
 
         assocPartIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         assocPartNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         assocPartStockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
         assocPartPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
+        
+        idInput.setText(String.valueOf(selectedProduct.getId()));
+        nameInput.setText(selectedProduct.getName());
+        stockInput.setText(String.valueOf(selectedProduct.getStock()));
+        priceInput.setText(String.valueOf(selectedProduct.getPrice()));
+        maxInput.setText(String.valueOf(selectedProduct.getMax()));
+        minInput.setText(String.valueOf(selectedProduct.getMin()));
     }
 }

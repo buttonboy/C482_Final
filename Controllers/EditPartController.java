@@ -137,6 +137,8 @@ public class EditPartController implements Initializable {
      * Add new part to inventory and load MainController.
      *
      * Validates Inputs before saving, display error on fail.
+     * 
+     * Removes selected part and replaces it with new part
      *
      * @param event Save button action.
      * @throws IOException FXMLLoader.
@@ -145,7 +147,7 @@ public class EditPartController implements Initializable {
     void saveButtonAction(ActionEvent event) throws IOException {
 
         try {
-            int id = (idInput.getLength() > 0)? Integer.parseInt(idInput.getText()): Inventory.createPartID();
+            int id = selectedPart.getId();
             String name = nameInput.getText();
             Double price = Double.parseDouble(priceInput.getText());
             int stock = Integer.parseInt(stockInput.getText());
@@ -153,34 +155,34 @@ public class EditPartController implements Initializable {
             int max = Integer.parseInt(maxInput.getText());
             int machineId;
             String compName;
-            boolean partAddSuccessful = false;
 
             //If Entered ID is already used generate new one.
-            id = (Validate.partID(id))? id : Inventory.createPartID();
+            //id = (Validate.partID(id))? id : Inventory.createPartID();
 
             if (Validate.name(name)){
                 if (Validate.minimum(min, max) && Validate.stock(min, max, stock)) {
 
                     if (inHouseRadioButton.isSelected()) {
-                        try {
-                            machineId = Integer.parseInt(machineCompInput.getText());
-                            InHouse newInHousePart = new InHouse(id, name, price, stock, min, max, machineId);
-                            Inventory.addPart(newInHousePart);
-                            partAddSuccessful = true;
+                        machineId = Integer.parseInt(machineCompInput.getText());
+                        InHouse newPart = new InHouse(id, name, price, stock, min, max, machineId);
+                        try{
+                            Inventory.addPart(newPart);
+                            Inventory.deletePart(selectedPart);
+                            returnToMainPage(event);
                         } catch (Exception e) {
-                            Alerts.error(Alerts.Errors.PART_ADD_FAIL);;
+                            Alerts.error(Alerts.Errors.PART_ADD_FAIL);
                         }
-                    }
-
-                    if (outsourcedRadioButton.isSelected()) {
+                           
+                    } else if (outsourcedRadioButton.isSelected()) {
                         compName = machineCompInput.getText();
-                        Outsourced newOutsourcedPart = new Outsourced(id, name, price, stock, min, max, compName);
-                        Inventory.addPart(newOutsourcedPart);
-                        partAddSuccessful = true;
-                    }
-
-                    if (partAddSuccessful) {
-                        returnToMainPage(event);
+                        Outsourced newPart = new Outsourced(id, name, price, stock, min, max, compName);
+                        try{
+                            Inventory.addPart(newPart);
+                            Inventory.deletePart(selectedPart);
+                            returnToMainPage(event);
+                        } catch (Exception e) {
+                            Alerts.error(Alerts.Errors.PART_ADD_FAIL);
+                        }
                     }
                 }
             }

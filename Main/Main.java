@@ -10,16 +10,23 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+
 /**
  * Inventory Management Application
+ * 
+ * A Future Enhancement would be to add stock management to adding parts to products. 
+ * a product may only a few parts from what is available. Currently it uses all of them.
+ * 
+ * I had issues with the stock not being updated through the constructor. Used Product.setStock() to resolve the issue.
  *
  * @author Matt Goldstine
+ * {@docRoot}
  *
  */
 public class Main extends Application {
 
     /**
-     * Start Main Scene.
+     * Start Main Page.
      *
      * @param primaryStage
      * @throws Exception
@@ -33,9 +40,9 @@ public class Main extends Application {
     }
 
     /**
-     * The main method is the entry point of the application.
+     * The main method for the application.
      *
-     * The main method creates sample data and launches the application.
+     * Create default sample data and load main page.
      * 
      * @param args
      */

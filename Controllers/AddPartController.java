@@ -110,7 +110,7 @@ public class AddPartController implements Initializable {
     /**
      * Update machine ID/company name label to "Machine ID".
      *
-     * @param event In-house raido button action.
+     * @param event In-house radio button action.
      */
     @FXML
     void inHouseRadioButtonAction(ActionEvent event) {
@@ -149,7 +149,6 @@ public class AddPartController implements Initializable {
             int max = Integer.parseInt(maxInput.getText());
             int machineId;
             String compName;
-            boolean partAddSuccessful = false;
 
             //If Entered ID is already used generate new one.
             id = (Validate.partID(id))? id : Inventory.createPartID();
@@ -158,25 +157,24 @@ public class AddPartController implements Initializable {
                 if (Validate.minimum(min, max) && Validate.stock(min, max, stock)) {
 
                     if (inHouseRadioButton.isSelected()) {
-                        try {
-                            machineId = Integer.parseInt(machineCompInput.getText());
-                            InHouse newInHousePart = new InHouse(id, name, price, stock, min, max, machineId);
-                            Inventory.addPart(newInHousePart);
-                            partAddSuccessful = true;
+                        machineId = Integer.parseInt(machineCompInput.getText());
+                        InHouse newPart = new InHouse(id, name, price, stock, min, max, machineId);
+                        try{
+                            Inventory.addPart(newPart);
+                            returnToMainPage(event);
                         } catch (Exception e) {
-                            Alerts.error(Alerts.Errors.PART_ADD_FAIL);;
+                            Alerts.error(Alerts.Errors.PART_ADD_FAIL);
                         }
-                    }
-
-                    if (outsourcedRadioButton.isSelected()) {
+                           
+                    } else if (outsourcedRadioButton.isSelected()) {
                         compName = machineCompInput.getText();
-                        Outsourced newOutsourcedPart = new Outsourced(id, name, price, stock, min, max, compName);
-                        Inventory.addPart(newOutsourcedPart);
-                        partAddSuccessful = true;
-                    }
-
-                    if (partAddSuccessful) {
-                        returnToMainPage(event);
+                        Outsourced newPart = new Outsourced(id, name, price, stock, min, max, compName);
+                        try{
+                            Inventory.addPart(newPart);
+                            returnToMainPage(event);
+                        } catch (Exception e) {
+                            Alerts.error(Alerts.Errors.PART_ADD_FAIL);
+                        }
                     }
                 }
             }

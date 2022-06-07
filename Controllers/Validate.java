@@ -36,7 +36,7 @@ public class Validate {
     }
 
     /**
-     * Make sure name string is not blank of empty
+     * Make sure name string is not blank or empty
      * @param name name to check
      * @return bool if name is valid
      */
