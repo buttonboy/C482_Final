@@ -5,22 +5,32 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceDialog;
 
+/**
+ * Class used for display Errors and Confirmation Dialogs
+ * 
+ * @author Matt Goldstine
+ */
 public class Alerts {
 
+    /**
+     * Enum Containing Error Messages
+     */
     public static enum Errors {
         PART_ADD_FAIL,INVALID_MACHINEID,INVALID_MIN,INVALID_NAME,INVALID_STOCK, 
         PRODUCT_ADD_FAIL, PART_NOT_FOUND, PART_NOT_SELECTED, INVALID_ID, PRODUCT_NOT_FOUND, PRODUCT_NOT_SELECTED, PART_IN_USE
 
     }
 
+    /**
+     * Enum Containing Confirmation Messages
+     */
     public static enum Confirm {
         RETURN_TO_MAIN, CONFIRM_PART_REMOVE, CONFIRM_DELETE_PRODUCT, CONFIRM_DELETE_PART
     }
 
-    //private Errors getErrorType
-
     /**
-     * Displays alert messages.
+     * 
+     * Displays Error Alert Dialogs
      *
      * @param errorMSg Alert To Display.
      */
@@ -100,6 +110,11 @@ public class Alerts {
         }
     }
 
+    /**
+     * Generates Confirmation Dialog
+     * @param Enum for Type of Dialog
+     * @return Dialog to be used for returning answer
+     */
     public static Alert confirm(Confirm dialogType){
 
         Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
@@ -128,7 +143,9 @@ public class Alerts {
 
     }
 
-
+    /**
+     * Unused Choice Dialog type
+     */
     public static ChoiceDialog<String> choice(String[] Choices, Confirm dialogType){
 
         ChoiceDialog dialog = new ChoiceDialog<String>();

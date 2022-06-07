@@ -2,6 +2,11 @@ package Controllers;
 
 import Model.Inventory;
 
+/**
+ * Class used for Validating Inputs
+ * 
+ * @author Matt Goldstine
+ */
 public class Validate {
 
    /**

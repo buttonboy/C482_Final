@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  * I had issues with the stock not being updated through the constructor. Used Product.setStock() to resolve the issue.
  *
  * @author Matt Goldstine
- * {@docRoot}
+ * Javadocs: {@docRoot}/javadoc
  *
  */
 public class Main extends Application {
